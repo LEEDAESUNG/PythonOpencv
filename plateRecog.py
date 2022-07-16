@@ -1,5 +1,8 @@
 #main 브랜치
 #main 브랜치2
+#temp 브랜치에서 수정함
+#temp 브랜치에서 수정함2
+
 import cv2
 from cv2 import imshow
 import numpy as np
@@ -223,7 +226,7 @@ for i, matched_chars in enumerate(matched_result):
     })
     
     plt.subplot(len(matched_result), 1, i+1)
-    plt.imshow(img_cropped, cmap='gray')  #차량번호가 번지듯히 나타남
+    plt.imshow(img_cropped, cmap='gray')  #차량번호 이미지가 번지듯히 나타남
     
 longest_idx, longest_text = -1, 0
 plate_chars = []
@@ -232,8 +235,7 @@ for i, plate_img in enumerate(plate_imgs):
     plate_img = cv2.resize(plate_img, dsize=(0, 0), fx=1.6, fy=1.6)
     _, plate_img = cv2.threshold(plate_img, thresh=0.0, maxval=255.0, type=cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     
-    # find contours again (same as above)
-    #_, contours, _ = cv2.findContours(plate_img, mode=cv2.RETR_LIST, method=cv2.CHAIN_APPROX_SIMPLE)
+    # find contours again(same as above)
     contours, hierarchy = cv2.findContours(plate_img, mode=cv2.RETR_LIST, method=cv2.CHAIN_APPROX_SIMPLE)
     
     plate_min_x, plate_min_y = plate_img.shape[1], plate_img.shape[0]
