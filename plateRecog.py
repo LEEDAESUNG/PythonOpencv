@@ -113,7 +113,31 @@ def find_chars(contour_list):
             area_diff = abs(d1['w']*d1['h'] - d2['w']*d2['h']) / (d1['w']*d1['h'])
             width_diff = abs(d1['w'] - d1['h']) / d1['w']
             height_diff = abs(d1['w'] - d1['h']) / d1['h']
+            
+            if distance < diagonal_length1*MAX_DIAG_MULTIPLYER \
+                and angle_diff<MAX_ANGLE_DIFF and area_diff<MAX_AREA_DIFF \
+                and width_diff<MAX_WIDTH_DIFF and height_diff<MAX_HEIGHT_DIFF:
+                    matched_contours_idx.appen(d2['idx'])
     
+        matched_contours_idx.append(d1['idx'])
+        
+        if len(matched_contours_idx) < MIN_N_MATCHED:
+            continue
+        
+        matched_result_idx.append(matched_contours_idx)
+        
+        unmatched_contour_idx = []
+        for d4 in contour_list:
+            if d4['idx'] not in matched_contours_idx:
+                unmatched_contour_idx.append(d4['idx'])
+        
+        #unmatched_contour_idx 만 가져오기
+        unmatched_contour = np.take(possible_contours, unmatched_contour_idx) 
+        
+        
+        
+        
+        
 # cv2.imshow('CHAIN_APPROX_NONE', img_ori)
 # cv2.imshow('CHAIN_APPROX_THRESH', img_thresh)
 # cv2.imshow('CHAIN_APPROX_POSSIBLE', img_temp)
