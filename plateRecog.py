@@ -265,11 +265,34 @@ for i, plate_img in enumerate(plate_imgs):
     _, img_result = cv2.threshold(img_result, thresh=0.0, maxval=255.0, type=cv2.THRESH_BINARY | cv2.THRESH_OTSU)
     img_result = cv2.copyMakeBorder(img_result, top=10, bottom=10, left=10, right=10, borderType=cv2.BORDER_CONSTANT, value=(0,0,0))
 
-    #chars = pytesseract.image_to_string(image=img_result, lang='kor', config='--psm 7 --oem 0')
+    #oem:
+    # 0 = Original Tesseract only.
+    # 1 = Neural nets LSTM only.
+    # 2 = Tesseract + LSTM.
+    # 3 = Default, based on what is available.
+    
+    #psm:
+    # 0 = Orientation and script detection (OSD) only.
+    # 1 = Automatic page segmentation with OSD.
+    # 2 = Automatic page segmentation, but no OSD, or OCR. (not implemented)
+    # 3 = Fully automatic page segmentation, but no OSD. (Default)
+    # 4 = Assume a single column of text of variable sizes.
+    # 5 = Assume a single uniform block of vertically aligned text.
+    # 6 = Assume a single uniform block of text.
+    # 7 = Treat the image as a single text line.
+    # 8 = Treat the image as a single word.
+    # 9 = Treat the image as a single word in a circle.
+    # 10 = Treat the image as a single character.
+    # 11 = Sparse text. Find as much text as possible in no particular order.
+    # 12 = Sparse text with OSD.
+    # 13 = Raw line. Treat the image as a single text line,
+    #     bypassing hacks that are Tesseract-specific.
+    
     pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract'
+    #config = ('-l kor+eng --oem 0 --psm 7')
     config = ('-l kor+eng --oem 3 --psm 11')
-    chars = pytesseract.image_to_string(img_result, config=config)
-    #chars = pytesseract.image_to_string(img_cropped, config=config) #임시테스트
+    #chars = pytesseract.image_to_string(img_result, config=config)
+    chars = pytesseract.image_to_string(img_cropped, config=config) #임시테스트
 
 
     result_chars = ''
@@ -280,14 +303,15 @@ for i, plate_img in enumerate(plate_imgs):
                 has_digit = True
             result_chars += c
     
-    print(result_chars)
+    print(result_chars) #차량번호 출력
     plate_chars.append(result_chars)
 
     if has_digit and len(result_chars) > longest_text:
         longest_idx = i
 
-    plt.subplot(len(plate_imgs), 1, i+1)
-    plt.imshow(img_result, cmap='gray')    #차량번호가 선명한게 나타남
+    # plt.subplot(1, 1, 1)
+    # plt.title('plate_imgs only')
+    # plt.imshow(plate_imgs, cmap='gray')
         
 
 # info = plate_infos[longest_idx]
@@ -309,39 +333,34 @@ for i, plate_img in enumerate(plate_imgs):
 
 plt.figure(figsize = (8,2))
 
-plt.subplot(1,6,1)
+plt.subplot(1,7,1)
 plt.title('Original only')
 plt.imshow(img_ori, cmap='gray')
 
-plt.subplot(1,6,2)
+plt.subplot(1,7,2)
 plt.title('Blurred only')
 plt.imshow(img_blurred, cmap='gray')
 
-plt.subplot(1,6,3)
+plt.subplot(1,7,3)
 plt.title('Blur and Threshold')
 plt.imshow(img_thresh, cmap='gray')
 
-plt.subplot(1,6,4)
+plt.subplot(1,7,4)
 plt.title('Contour')
 plt.imshow(img_contour, cmap='gray')
 
-plt.subplot(1,6,5)
+plt.subplot(1,7,5)
 plt.title('Possible Contour')
 plt.imshow(img_PossibleContour, cmap='gray')
 
-# plt.subplot(1,6,6)
-# plt.title('temp_result only')
-# plt.imshow(temp_result, cmap='gray')
+plt.subplot(1,7,6)
+plt.title('img_cropped only')
+plt.imshow(img_cropped, cmap='gray') #뿌연 차량번호
 
+plt.subplot(1,7,7)
+plt.title('img_result only')
+plt.imshow(img_result, cmap='gray') #선명한 차량번호
 
-# chars = pytesseract.image_to_string(img_PossibleContour, lang='kor', config='--psm 7 --oem 0')
-# print(chars)
-pytesseract.pytesseract.tesseract_cmd = r'C:\\Program Files\\Tesseract-OCR\\tesseract'
-config = ('-l kor+eng --oem 3 --psm 11')
-#text = pytesseract.image_to_string(img_result, config=config)
-text = pytesseract.image_to_string(temp_result, config=config)
-print('==========텍스트 인식 결과==========')
-print(text)
 
 # plt.subplot(1,6,6)
 # plt.title('rotated Contour')
