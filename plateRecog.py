@@ -357,9 +357,9 @@ plt.subplot(1,7,6)
 plt.title('img_cropped only')
 plt.imshow(img_cropped, cmap='gray') #뿌연 차량번호
 
-plt.subplot(1,7,7)
-plt.title('img_result only')
-plt.imshow(img_result, cmap='gray') #선명한 차량번호
+# plt.subplot(1,7,7)
+# plt.title('img_result only')
+# plt.imshow(img_result, cmap='gray') #선명한 차량번호
 
 
 # plt.subplot(1,6,6)
